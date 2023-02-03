@@ -1,0 +1,15 @@
+---
+# tasks file for roles/database
+
+- name: Launching database
+  docker_container:
+    name: database
+    restart_policy: always
+    state: started
+    image: marcllopcpe/database:latest
+    networks:
+      - name: "app-network"
+    env:
+      POSTGRES_PASSWORD: "pwd"
+      POSTGRES_USER: "usr"
+      POSTGRES_DB: "db"

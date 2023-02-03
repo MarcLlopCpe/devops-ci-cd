@@ -1,0 +1,49 @@
+- hosts: all
+  become: yes
+  tasks:
+
+    - name: Create a network
+      community.docker.docker_network:
+        name: app-network
+
+    - name: Database check pull run
+      docker_container:
+        name: database
+        restart_policy: always
+        state: started
+        image: marcllopcpe/database:latest
+        networks:
+          - name: "app-network"
+        env:
+          POSTGRES_PASSWORD: "pwd"
+          POSTGRES_USER: "usr"
+          POSTGRES_DB: "db"
+
+
+    - name: Httpd check pull run
+      docker_container:
+        name: httpd
+        state: started
+        image: marcllopcpe/httpd:latest
+        published_ports:
+          - "80:80"
+          - "8080:8080"
+        networks:
+          - name: "app-network"
+
+    - name: Front check pull run
+      docker_container:
+        name: front
+        state: started
+        image: marcllopcpe/front:latest
+        networks:
+          - name: "app-network"
+
+    - name: Simple-Api check pull run
+      docker_container:
+        name: backend
+        state: started
+
+        image: marcllopcpe/simple-api:latest
+        networks:
+          - name: "app-network"

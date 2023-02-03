@@ -1,0 +1,18 @@
+---
+# tasks file for roles/app
+
+- name: Launching frontend
+  docker_container:
+    name: front
+    state: started
+    image: marcllopcpe/front:latest
+    networks:
+      - name: "app-network"
+
+- name: Launching backend
+  docker_container:
+    name: backend
+    state: started
+    image: marcllopcpe/simple-api:latest
+    networks:
+      - name: "app-network"
